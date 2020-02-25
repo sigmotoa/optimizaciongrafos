@@ -14,10 +14,11 @@
 
 	using namespace std;
 
-	int matriz[100][100],n,m, iteraciones; //Matriz para el ingreso del grafo, n=vertices, m=hormigas, iteraciones=sitio mas lejano
+	int matriz[100][100],n,m, iteraciones,candidatos[100]; //Matriz para el ingreso del grafo, n=vertices, m=hormigas, iteraciones=sitio mas lejano
 	float beta, alpha, tau0, feromonas[100][100], evaporacion;//Parametros del algoritmo
 	int cliquemaximal[100], valormejor, cliquemaximalmejor[100], evaluacion, grados[100];
 
+	int candidatos_novacio(void);
 	void lectura_archivo(void);
 	void construir_solucion(int j);
 	void actualizar_mejor(int j, int i);
@@ -94,15 +95,22 @@
 
 	}
 	void construir_solucion(int j /* hormiga j-esima */) {
-		int contcand, candidatos[100], posmayor;
+		int contcand,  posmayor;
 		float probij[100], suma, mayorprob;
 
 
-		for (int i=0;  i < n; i++)
-			candidatos[i]=1;
+		//for (int i=0;  i < n; i++)
+		//	candidatos[i]=1;
 		cliquemaximal[0]=rand()%n;
-		candidatos[cliquemaximal[0]]=0;
-		for (contcand=1; contcand < n; contcand++) {
+		
+		for(int i =0; i<n; i++)
+		{
+			candidatos[i]=matriz[cliequemaximal[0]][i];
+		}
+		contcand=0;
+		
+		
+		while (candidatos_novacio()==0) {//Validar los 1 en el vector de candidatos
 			// construye la cliquemaximal y la probabilidad del siguiente vertice
 			suma=0;
 			for (int i=0; i < n; i++) {// numerador y denominador de PROB
@@ -111,7 +119,7 @@
 				//	pow((float) 1/matriz[cliquemaximal[contcand-1]][i], alpha)//cuidado, revisar  por 						cliquemaximal
 					//	*pow(feromonas[cliquemaximal[contcand-1]][i], beta);//probabilidad de la ciudad siguiente 						revisar apuntes
 					pow(grados[contcand-1], alpha)
-					*pow(feromonas[cliquemaximal[contcand-1]][i], beta);
+					*pow(feromonas[cliquemaximal[contcand]][i], beta);
 					suma = suma + // denominador
 					probij[i];
 					// pow((float) 1/matriz[cliquemaximal[contcand-1]][i], alpha)
@@ -133,7 +141,16 @@
 				}
 			}
 			printf("\n");
+			contcand++;
 			cliquemaximal[contcand]=posmayor;
+			
+			for (int i =0; i<n;i++)
+			{
+				if(candidatos[i]+matriz[cliquemaximal[contcand]][i]==2)
+				candidatos[i]=1;
+				else candidatos[i]=0;
+				
+		}
 			candidatos[posmayor] = 0;
 		} // fin de ciclo de contcand construir la cliquemaximal
 		//imprimir solucion encontrada por hormiga j
@@ -161,7 +178,7 @@
 	  	printf("\n");
 	  }
 	}
-	void actualizar_feromonas(void){
+	void actualizar_feromonas(void){ //Pendiente
 		for (int i=0; i < (n-1); i++) {
 			feromonas[cliquemaximalmejor[i]][cliquemaximalmejor[i+1]]=
 				(float) 1/valormejor;
@@ -178,5 +195,13 @@
 
 	}
 
+int candidatos_novacio(void)
+{
+for(int i=0;i<n;i++)
+{
+	if(candidatos[i]!=0) return 0;
+}
+return 1;
+}
 
 
