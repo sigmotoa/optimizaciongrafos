@@ -1,8 +1,9 @@
-	/* COLONIA DE HORMIGAS: Aplicación subgrafos
-	Brian Villegas Villalpando edited by sigmotoa
-	Licenciatura en Matemáticas Aplicadas
+	/* COLONIA DE HORMIGAS: Aplicación al problema del Clique maximo
+	sigmotoa
+	Ciencias Basicas
+	MITC
 	Sexto semestre
-	21 de febrero de 2020*/
+	26 de febrero de 2020*/
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <cstdlib>
@@ -16,7 +17,7 @@
 
 	int matriz[100][100],n,m, iteraciones,candidatos[100]; //Matriz para el ingreso del grafo, n=vertices, m=hormigas, iteraciones=sitio mas lejano
 	float beta, alpha, tau0, feromonas[100][100], evaporacion;//Parametros del algoritmo
-	int cliquemaximal[100], valormejor, cliquemaximalmejor[100], evaluacion, grados[100];
+	int cliquemaximal[100],  cliquemaximalmejor[100], evaluacion, grados[100], valormejor=0;
 
 	int candidatos_novacio(void);
 	void lectura_archivo(void);
@@ -105,7 +106,7 @@
 		
 		for(int i =0; i<n; i++)
 		{
-			candidatos[i]=matriz[cliequemaximal[0]][i];
+			candidatos[i]=matriz[cliquemaximal[0]][i];
 		}
 		contcand=0;
 		
@@ -158,33 +159,36 @@
 		for (int i =0; i < n; i++)
 			printf("%d ", cliquemaximal [i]);
 		printf("\n");
-		// evaluando la solucion de la hormiga j-esima
-		evaluacion=0;
+		// evaluando la solucion de la hormiga j-esima para clique maximo
+		evaluacion=contcand;
 		for (int i=0; i < n -1; i++)	{
 			evaluacion=evaluacion+matriz[cliquemaximal[i]][cliquemaximal[i+1]];
 		}
 		evaluacion=evaluacion+matriz[cliquemaximal[n-1]][cliquemaximal[0]];
-		printf("Distancia Total: %d hormiga: %d", evaluacion, j);
+		printf("Evaluación de la solución: %d hormiga: %d", evaluacion, j);
 		printf("\n");
 	} // fin construir_solucion()
 	void actualizar_mejor(int j, int i) {
-	  if (evaluacion < valormejor) {
+	  if (evaluacion > valormejor) {
 	  	valormejor=evaluacion;
 	  	printf("Mejor solucion hasta el momento, i= %d j = %d\n", i,j);
 	  	for (int k=0; k < n; k++){
 	  	cliquemaximalmejor[k]	= cliquemaximal[k];
 	  		printf("%d ", cliquemaximalmejor[k]);
 	  	}
+	  	printf("%d", valormejor);
 	  	printf("\n");
 	  }
 	}
-	void actualizar_feromonas(void){ //Pendiente
+	void actualizar_feromonas(void){
+	
+	//usar criterio de ciclo de los vertices del clique maximal
 		for (int i=0; i < (n-1); i++) {
 			feromonas[cliquemaximalmejor[i]][cliquemaximalmejor[i+1]]=
-				(float) 1/valormejor;
+				valormejor;
 		}
 		feromonas[cliquemaximalmejor[n-1]][cliquemaximalmejor[0]] =
-			(float) 1/valormejor;
+			valormejor;
 	}
 	void actualizar_evaporacion(void) {
 		for (int i=0; i< n; i++){
