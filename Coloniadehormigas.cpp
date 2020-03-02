@@ -156,7 +156,7 @@
 		} // fin de ciclo de contcand construir la cliquemaximal
 		//imprimir solucion encontrada por hormiga j
 		printf("La hormiga %d construye la solucion: ", j);
-		for (int i =0; i < n; i++)
+		for (int i =0; i < contcand+1; i++)
 			printf("%d ", cliquemaximal [i]);
 		printf("\n");
 		// evaluando la solucion de la hormiga j-esima para clique maximo
